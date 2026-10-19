@@ -1,16 +1,19 @@
 class Solution {
 public:
     vector<int> targetIndices(vector<int>& nums, int target) {
-        int n = nums.size();
+        int less = 0, equal = 0;
 
-        vector<int> indices;
+        for (int num : nums) {
+            if (num < target)
+                less++;
+            else if (num == target)
+                equal++;
+        }
 
-        sort(nums.begin(), nums.end());
+        vector<int> indices(equal);
 
-        for (int i = 0; i < n; i++) {
-            if (nums[i] == target) {
-                indices.push_back(i);
-            }
+        for (int i = 0; i < equal; i++) {
+            indices[i] = less + i;
         }
 
         return indices;
