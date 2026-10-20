@@ -23,14 +23,14 @@ public:
 
         sort(v.begin(), v.end());
 
-        node* dummy = new node(0);
-        node* curr = dummy;
+        node dummy(0);
+        node* curr = &dummy;
 
         for (int x : v) {
             curr->next = new node(x);
             curr = curr->next;
         }
 
-        return dummy->next;
+        return dummy.next;
     }
 };
