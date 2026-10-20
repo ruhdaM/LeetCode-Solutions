@@ -19,14 +19,13 @@ public:
             lenB++;
         }
 
-        while (lenA > lenB) {
-            headA = headA->next;
-            lenA--;
+        if (lenA < lenB) {
+            swap(headA, headB);
+            swap(lenA, lenB);
         }
 
-        while (lenB > lenA) {
-            headB = headB->next;
-            lenB--;
+        for (int diff = lenA - lenB; diff > 0; diff--) {
+            headA = headA->next;
         }
 
         while (headA != headB) {
