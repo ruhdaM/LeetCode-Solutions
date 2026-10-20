@@ -11,26 +11,52 @@
 class Solution {
     using node = ListNode;
 
-public:
-    ListNode* sortList(ListNode* head) {
-        vector<int> v;
-        node* temp = head;
+    node* findMiddle(node* head) {
+        node* slow = head;
+        node* fast = head->next;
 
-        while (temp) {
-            v.push_back(temp->val);
-            temp = temp->next;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
         }
 
-        sort(v.begin(), v.end());
+        return slow;
+    }
 
+    node* merge(node* l1, node* l2) {
         node dummy(0);
-        node* curr = &dummy;
+        node* tail = &dummy;
 
-        for (int x : v) {
-            curr->next = new node(x);
-            curr = curr->next;
+        while (l1 && l2) {
+            if (l1->val < l2->val) {
+                tail->next = l1;
+                l1 = l1->next;
+            } else {
+                tail->next = l2;
+                l2 = l2->next;
+            }
+
+            tail = tail->next;
         }
+
+        tail->next = l1 ? l1 : l2;
 
         return dummy.next;
+    }
+
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head->next)
+            return head;
+
+        node* mid = findMiddle(head);
+        node* left = head;
+        node* right = mid->next;
+        mid->next = nullptr;
+
+        left = sortList(left);
+        right = sortList(right);
+
+        return merge(left, right);
     }
 };
