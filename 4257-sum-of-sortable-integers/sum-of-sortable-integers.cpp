@@ -1,7 +1,18 @@
 class Solution {
+
+    bool check(vector<int>& nums, int start, int k) {
+        int cnt = 0;
+        for (int i = 0; i < k; i++) {
+            if (nums[start + i] > nums[start + (i + 1) % k])
+                cnt++;
+        }
+        return cnt <= 1;
+    }
+
 public:
     int sortableIntegers(vector<int>& nums) {
-        int n = nums.size(), ans = 0;
+        int n = nums.size();
+        int sum = 0;
 
         for (int k = 1; k <= n; k++) {
             if (n % k != 0)
@@ -10,28 +21,27 @@ public:
             bool ok = true;
             int prevMax = 0;
 
-            for (int l = 0; l < n && ok; l += k) {
-                int drops = 0, mn = INT_MAX, mx = INT_MIN;
-
-                for (int j = l; j < l + k; j++) {
-                    int next = (j + 1 < l + k) ? nums[j + 1] : nums[l];
-
-                    if (nums[j] > next)
-                        drops++;
-
-                    mn = min(mn, nums[j]);
-                    mx = max(mx, nums[j]);
+            for (int start = 0; start < n; start += k) {
+                if (!check(nums, start, k)) {
+                    ok = false;
+                    break;
                 }
 
-                if (drops > 1 || mn < prevMax)
+                int mn = *min_element(nums.begin() + start,
+                                      nums.begin() + start + k);
+                int mx = *max_element(nums.begin() + start,
+                                      nums.begin() + start + k);
+
+                if (mn < prevMax) {
                     ok = false;
-                    
+                    break;
+                }
                 prevMax = mx;
             }
 
             if (ok)
-                ans += k;
+                sum += k;
         }
-        return ans;
+        return sum;
     }
 };
