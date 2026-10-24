@@ -13,9 +13,16 @@ class Solution {
 public:
     int countDaysTogether(string arriveAlice, string leaveAlice,
                           string arriveBob, string leaveBob) {
-        int s = max(day(arriveAlice), day(arriveBob));
-        int e = min(day(leaveAlice), day(leaveBob));
+        int aA = day(arriveAlice), lA = day(leaveAlice);
+        int aB = day(arriveBob), lB = day(leaveBob);
 
-        return max(0, e - s + 1);
+        int count = 0;
+
+        for (int d = 1; d <= 365; d++) {
+            if (d >= aA && d <= lA && d >= aB && d <= lB)
+                count++;
+        }
+
+        return count;
     }
 };
