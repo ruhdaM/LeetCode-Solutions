@@ -12,21 +12,25 @@
  */
 class Solution {
 public:
-    int diameterOfBinaryTree(TreeNode* root) {
-        int ans = 0;
-        height(root, ans);
+    pair<int, int> solve(TreeNode* root) {
+        if (root == nullptr) {
+            pair<int, int> p = make_pair(0, 0);
+            return p;
+        }
+
+        pair<int, int> left = solve(root->left);
+        pair<int, int> right = solve(root->right);
+
+        int o1 = left.first;
+        int o2 = right.first;
+        int o3 = left.second + right.second;
+
+        pair<int, int> ans;
+        ans.first = max({o1, o2, o3});
+        ans.second = max(left.second, right.second) + 1;
+
         return ans;
     }
 
-    int height(TreeNode* node, int& ans) {
-        if (!node)
-            return 0;
-
-        int l = height(node->left, ans);
-        int r = height(node->right, ans);
-
-        ans = max(ans, l + r);
-
-        return 1 + max(l, r);
-    }
+    int diameterOfBinaryTree(TreeNode* root) { return solve(root).first; }
 };
