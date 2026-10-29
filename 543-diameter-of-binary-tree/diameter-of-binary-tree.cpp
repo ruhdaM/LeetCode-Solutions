@@ -11,26 +11,22 @@
  * };
  */
 class Solution {
-public:
-    pair<int, int> solve(TreeNode* root) {
-        if (root == nullptr) {
-            pair<int, int> p = make_pair(0, 0);
-            return p;
-        }
+    int diameter = 0;
 
-        pair<int, int> left = solve(root->left);
-        pair<int, int> right = solve(root->right);
+    int height(TreeNode* root) {
+        if (root == nullptr)
+            return 0;
 
-        int o1 = left.first;
-        int o2 = right.first;
-        int o3 = left.second + right.second;
+        int l = height(root->left);
+        int r = height(root->right);
+        diameter = max(diameter, l + r);
 
-        pair<int, int> ans;
-        ans.first = max({o1, o2, o3});
-        ans.second = max(left.second, right.second) + 1;
-
-        return ans;
+        return max(l, r) + 1;
     }
 
-    int diameterOfBinaryTree(TreeNode* root) { return solve(root).first; }
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        height(root);
+        return diameter;
+    }
 };
