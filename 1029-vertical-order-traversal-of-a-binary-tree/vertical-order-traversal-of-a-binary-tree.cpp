@@ -13,34 +13,44 @@
 class Solution {
 public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
-        vector<tuple<int, int, int>> nodes; // col, row, val
-
-        dfs(root, 0, 0, nodes);
-        sort(nodes.begin(), nodes.end());
-
         vector<vector<int>> ans;
-        int prevCol = INT_MIN;
 
-        for (auto& [col, row, val] : nodes) {
-            if (col != prevCol) {
-                ans.push_back({});
-                prevCol = col;
+        if (root == nullptr)
+            return ans;
+
+        map<int, map<int, multiset<int>>> nodes;
+        queue<pair<TreeNode*, pair<int, int>>> q;
+
+        q.push({root, {0, 0}});
+
+        while (!q.empty()) {
+            auto temp = q.front();
+            q.pop();
+
+            TreeNode* frontNode = temp.first;
+            int hd = temp.second.first;
+            int lvl = temp.second.second;
+
+            nodes[hd][lvl].insert(frontNode->val);
+
+            if (frontNode->left)
+                q.push({frontNode->left, {hd - 1, lvl + 1}});
+            if (frontNode->right)
+                q.push({frontNode->right, {hd + 1, lvl + 1}});
+        }
+
+        for (auto& i : nodes) {
+            vector<int> cols;
+
+            for (auto& j : i.second) {
+                for (auto& k : j.second) {
+                    cols.push_back(k);
+                }
             }
 
-            ans.back().push_back(val);
+            ans.push_back(cols);
         }
 
         return ans;
-    }
-
-    void dfs(TreeNode* node, int row, int col,
-             vector<tuple<int, int, int>>& nodes) {
-        if (node == nullptr)
-            return;
-
-        nodes.push_back({col, row, node->val});
-
-        dfs(node->left, row + 1, col - 1, nodes);
-        dfs(node->right, row + 1, col + 1, nodes);
     }
 };
